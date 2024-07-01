@@ -1,0 +1,51 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class MainApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the path to the input text file: ");
+        String inputFilePath = scanner.nextLine();
+
+        System.out.print("Enter the path to the output text file: ");
+        String outputFilePath = scanner.nextLine();
+
+        try {
+            int lineCount = countLinesInFile(inputFilePath);
+            System.out.println("The number of lines in the input file is: " + lineCount);
+
+            writeOutputFile(outputFilePath, inputFilePath, lineCount);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+    private static int countLinesInFile(String filePath) throws IOException {
+        int lineCount = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            while (reader.readLine() != null) {
+                lineCount++;
+            }
+        } catch (IOException e) {
+            throw new IOException("File not found: " + filePath);
+        }
+
+        return lineCount;
+    }
+
+    private static void writeOutputFile(String outputFilePath, String inputFilePath, int lineCount) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+            writer.write("File name: " + inputFilePath);
+            writer.newLine();
+            writer.write("Number of lines: " + lineCount);
+        } catch (IOException e) {
+            throw new IOException("Unable to write to file: " + outputFilePath);
+        }
+    }
+}
